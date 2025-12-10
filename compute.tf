@@ -31,19 +31,19 @@ resource "aws_instance" "web_server" {
     Name = "web-server-${random_id.random_node_id[count.index].dec}"
   }
 
-  provisioner "local-exec" {
-  # Change the path below to match your Git installation location
-  #interpreter = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]
+#   provisioner "local-exec" {
+#   # Change the path below to match your Git installation location
+#   #interpreter = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]
   
-  # Your Bash command
-  command     = "printf '\\n${self.public_ip}' >> aws_hosts"
-}
+#   # Your Bash command
+#   command     = "printf '\\n${self.public_ip}' >> aws_hosts"
+# }
 
-  provisioner "local-exec" {
-    when    = destroy
-    #interpreter = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]
-    command = "sed -i '/^[0-9]/d' aws_hosts"
-  }
+#   provisioner "local-exec" {
+#     when    = destroy
+#     #interpreter = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]
+#     command = "sed -i '/^[0-9]/d' aws_hosts"
+#   }
 
   vpc_security_group_ids = [aws_security_group.project_sg.id]
 }
@@ -57,34 +57,34 @@ resource "aws_instance" "web_server" {
 #   wsl_key_path = replace(local.windows_key_path, "C:/Users/utki_", "~")
 # }
 
-resource "null_resource" "grafana_provisioner" {
+# resource "null_resource" "grafana_provisioner" {
   
-  # 1. Dependency: Waits for the instance to be created and the IP to be written.
-  depends_on = [aws_instance.web_server] 
+#   # 1. Dependency: Waits for the instance to be created and the IP to be written.
+#   depends_on = [aws_instance.web_server] 
   
-  # 2. Remote-Exec (SSH Wait Loop): This is CRUCIAL. It forces Terraform 
-  #    to wait until the instance is fully booted and the SSH port is open.
-  # provisioner "remote-exec" {
+#   # 2. Remote-Exec (SSH Wait Loop): This is CRUCIAL. It forces Terraform 
+#   #    to wait until the instance is fully booted and the SSH port is open.
+#   # provisioner "remote-exec" {
         
-  #   connection {
-  #     type        = "ssh"
-  #     user        = "ubuntu" # Standard user for Ubuntu AMI
-  #     host        = aws_instance.web_server[0].public_ip 
-  #     private_key = var.aws_prv_key_content
-  #     # Note: Ensure the private key content is provided correctly by Jenkins
-  #     timeout     = "5m" # Wait up to 5 minutes
-  #   }
+#   #   connection {
+#   #     type        = "ssh"
+#   #     user        = "ubuntu" # Standard user for Ubuntu AMI
+#   #     host        = aws_instance.web_server[0].public_ip 
+#   #     private_key = var.aws_prv_key_content
+#   #     # Note: Ensure the private key content is provided correctly by Jenkins
+#   #     timeout     = "5m" # Wait up to 5 minutes
+#   #   }
 
-  #   # Placeholder command to force the connection attempt
-  #   inline = ["echo 'Connection test successful. Instance is ready for Ansible.'"] 
-  # }
+#   #   # Placeholder command to force the connection attempt
+#   #   inline = ["echo 'Connection test successful. Instance is ready for Ansible.'"] 
+#   # }
 
-  # 3. Local-Exec (Ansible Call): Runs ONLY after the SSH wait succeeds.
-  provisioner "local-exec" {
-    # 🚨 USE WSL INTERPRETER 🚨
-    #interpreter = ["wsl", "bash", "-c"] 
+#   # 3. Local-Exec (Ansible Call): Runs ONLY after the SSH wait succeeds.
+#   provisioner "local-exec" {
+#     # 🚨 USE WSL INTERPRETER 🚨
+#     #interpreter = ["wsl", "bash", "-c"] 
 
-    # The Ansible command using the aws_hosts file and your private key
-    command = "ansible-playbook --private-key ${var.aws_prv_key_content} playbooks/grafana.yml"
-  }
-}
+#     # The Ansible command using the aws_hosts file and your private key
+#     command = "ansible-playbook --private-key ${var.aws_prv_key_content} playbooks/grafana.yml"
+#   }
+#}
