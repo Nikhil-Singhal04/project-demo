@@ -34,7 +34,7 @@ variable "aws_pub_key_content" {
   # No default needed, as it will be provided by Jenkins
 }
 
-variable "aws_private_key_content" {
+variable "aws_prv_key_content" {
   description = "The raw string content of the private key."
   type        = string
   # No default needed, as it will be provided by Jenkins

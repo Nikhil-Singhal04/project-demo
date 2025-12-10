@@ -70,7 +70,7 @@ resource "null_resource" "grafana_provisioner" {
       type        = "ssh"
       user        = "ubuntu" # Standard user for Ubuntu AMI
       host        = aws_instance.web_server[0].public_ip 
-      private_key = var.aws_private_key_content
+      private_key = var.aws_prv_key_content
       # Note: Ensure the private key content is provided correctly by Jenkins
       timeout     = "5m" # Wait up to 5 minutes
     }
@@ -85,6 +85,6 @@ resource "null_resource" "grafana_provisioner" {
     #interpreter = ["wsl", "bash", "-c"] 
 
     # The Ansible command using the aws_hosts file and your private key
-    command = "ansible-playbook --private-key ${var.aws_private_key_content} playbooks/grafana.yml"
+    command = "ansible-playbook --private-key ${var.aws_prv_key_content} playbooks/grafana.yml"
   }
 }
