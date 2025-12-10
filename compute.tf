@@ -64,20 +64,20 @@ resource "null_resource" "grafana_provisioner" {
   
   # 2. Remote-Exec (SSH Wait Loop): This is CRUCIAL. It forces Terraform 
   #    to wait until the instance is fully booted and the SSH port is open.
-  provisioner "remote-exec" {
+  # provisioner "remote-exec" {
         
-    connection {
-      type        = "ssh"
-      user        = "ubuntu" # Standard user for Ubuntu AMI
-      host        = aws_instance.web_server[0].public_ip 
-      private_key = var.aws_prv_key_content
-      # Note: Ensure the private key content is provided correctly by Jenkins
-      timeout     = "5m" # Wait up to 5 minutes
-    }
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ubuntu" # Standard user for Ubuntu AMI
+  #     host        = aws_instance.web_server[0].public_ip 
+  #     private_key = var.aws_prv_key_content
+  #     # Note: Ensure the private key content is provided correctly by Jenkins
+  #     timeout     = "5m" # Wait up to 5 minutes
+  #   }
 
-    # Placeholder command to force the connection attempt
-    inline = ["echo 'Connection test successful. Instance is ready for Ansible.'"] 
-  }
+  #   # Placeholder command to force the connection attempt
+  #   inline = ["echo 'Connection test successful. Instance is ready for Ansible.'"] 
+  # }
 
   # 3. Local-Exec (Ansible Call): Runs ONLY after the SSH wait succeeds.
   provisioner "local-exec" {
