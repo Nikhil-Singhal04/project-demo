@@ -21,7 +21,7 @@ pipeline {
                         returnStdout: true
                     ).trim()
                     
-                    // 2. Extract Instance ID (for AWS CLI wait)
+                    // 2. Extract Instance ID (for AWS CLI wait) 
                     env.INSTANCE_ID = sh(
                         script: 'terraform output -raw instance_id', 
                         returnStdout: true
