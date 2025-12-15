@@ -24,7 +24,8 @@ resource "aws_instance" "web_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   subnet_id     = aws_subnet.public_subnet[count.index].id
-  key_name      = aws_key_pair.deployer_key.key_name
+  key_name = var.key_name
+
   #user_data     = templatefile("main-userdata.tpl", { new_hostname = "web-server-${random_id.random_node_id[count.index].dec}" })
 
   tags = {
