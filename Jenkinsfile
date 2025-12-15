@@ -9,10 +9,28 @@ pipeline {
     }
 
     stages {
+        stage('Terraform Initialization') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+        stage('Terraform Plan') {
+            steps {
+                sh 'terraform plan'
+            }
+        }
+        stage('Validate Apply') {
+            input {
+                message "Do you want to apply this plan?"
+                ok "Apply"
+            }
+            steps {
+                echo 'Apply Accepted'
+            }
+        }
         stage('Terraform Provisioning') {
             steps {
                 script {
-                    sh 'terraform init'
                     sh 'terraform apply -auto-approve'
 
                     // 1. Extract Public IP Address of the provisioned instance
@@ -47,7 +65,15 @@ pipeline {
                 echo 'AWS instance health checks passed. Proceeding to Ansible.'
             }
         }
-
+        stage('Validate Ansible') {
+            input {
+                message "Do you want to run Ansible?"
+                ok "Run Ansible"
+            }
+            steps {
+                echo 'Ansible approved'
+            }
+        }
         stage('Ansible Configuration') {
             steps {
                 // Now you can proceed directly to Ansible, knowing SSH is almost certainly ready.
@@ -58,11 +84,30 @@ pipeline {
                 )
             }
         }
-    }
-    
+        stage('Validate Destroy') {
+            input {
+                message "Do you want to destroy?"
+                ok "Destroy"
+            }
+            steps {
+                echo 'Destroy Approved'
+            }
+        }
+        stage('Destroy') {
+            steps {
+                sh 'terraform destroy -auto-approve'
+            }
+        }
+    }    
     post {
         always {
             sh 'rm -f dynamic_inventory.ini'
+        }
+        success {
+            echo 'Success!'
+        }
+        failure {
+            sh 'terraform destroy -auto-approve'
         }
     }
 }
