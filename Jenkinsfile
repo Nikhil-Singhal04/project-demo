@@ -1,24 +1,36 @@
 pipeline {
     agent any
+
     environment {
-       TF_IN_AUTOMATION = 'true'
-       TF_CLI_CONFIG_FILE = credentials('AWS-CREDS')
+        TF_IN_AUTOMATION = 'true'
     }
+
     stages {
+
         stage('Init') {
             steps {
-                sh 'ls'
-                sh 'terraform init -no-color'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'AWS-CREDS']]) {
+                    sh 'terraform init -no-color'
+                }
             }
         }
+
         stage('Plan') {
             steps {
-                sh 'terraform plan -no-color'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'AWS-CREDS']]) {
+                    sh 'terraform plan -no-color'
+                }
             }
         }
-        stage('apply') {
+
+        stage('Apply') {
             steps {
-                sh 'terraform apply -auto-approve -no-color'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'AWS-CREDS']]) {
+                    sh 'terraform apply -auto-approve -no-color'
+                }
             }
         }
     }
