@@ -1,6 +1,7 @@
-options {
-    disableConcurrentBuilds()
-}
+properties([
+  disableConcurrentBuilds()
+])
+
 
 pipeline {
     agent any
