@@ -36,7 +36,7 @@ pipeline {
         stage('Terraform Provisioning') {
             steps {
                 script {
-                    sh 'terraform apply -auto-approve -var-file=${env.BRANCH_NAME}.tfvars'
+                    sh "terraform apply -auto-approve -var-file=${env.BRANCH_NAME}.tfvars"
 
                     // 1. Extract Public IP Address of the provisioned instance
                     env.INSTANCE_IP = sh(
