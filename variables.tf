@@ -13,7 +13,7 @@ variable "access_ip" {
 variable "instance_type" {
   description = "The type of instance to use for the web server"
   type        = string
-  default     = "t3.micro"
+  default     = "t2.micro"
 }
 
 variable "main_instance_count" {
@@ -25,5 +25,5 @@ variable "main_instance_count" {
 variable "key_name" {
   description = "The name of the key pair to use for SSH access"
   type        = string
-  default     = "deployer-key"
+  default     = "master-key"
 }

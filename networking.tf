@@ -13,14 +13,14 @@ terraform {
   backend "s3" {
     bucket       = "devops-automation-project-demo-111223344-utkarsh"
     key          = "terraform.tfstate"
-    region       = "us-east-2"
+    region       = "us-east-1"
     use_lockfile = true
     encrypt      = true
   }
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = "us-east-1"
 }
 
 data "aws_availability_zones" "available" {
